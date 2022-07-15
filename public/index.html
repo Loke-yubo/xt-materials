@@ -2,22 +2,26 @@
 <html lang="">
 
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-  <title>
-    <%= htmlWebpackPlugin.options.title %>
-  </title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<link rel="icon" href="<%= BASE_URL %>favicon.ico">
+	<!-- 参考ts-play的amd模块写法：可以看下https://www.tslang.cn/play/index.html的源码 -->
+	<script src="/libs/ts-playground/require.js"></script>
+	<script src="/require.config.js"></script>
+	<script src="./vue.min.js"></script>
+	<title>
+		<%= htmlWebpackPlugin.options.title %>
+	</title>
 </head>
 
 <body>
-  <noscript>
-    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
-        Please enable it to continue.</strong>
-  </noscript>
-  <div id="boss"></div>
-  <!-- built files will be auto injected -->
+	<noscript>
+		<strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+				Please enable it to continue.</strong>
+	</noscript>
+	<div id="boss"></div>
+	<!-- built files will be auto injected -->
 </body>
 
 </html>
