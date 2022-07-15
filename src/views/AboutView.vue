@@ -1,8 +1,8 @@
 <template>
   <div class="about">
     <h1>This is an about page</h1>
-    <button @click="toggleValue">切换显示</button>
-    <input @blur="render" v-model="id" type="text">
+    <button @click="toggle">切换</button>
+    <input v-model="id.value" type="text">
     <div id="container-wrapper">
       <div id="container"></div>
     </div>
@@ -10,59 +10,49 @@
 </template>
 
 <script lang="tsx">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 import { XtMaterialsRenderer } from '@/utils/xt-materials/renderer'
 import '../views-test/page1'
 
 export default defineComponent({
   data () {
-    const showTag = ref(true)
-    const id = ref('')
     const renderer = new XtMaterialsRenderer(window.Vue, {})
     return {
-      showTag,
-      id,
-      renderer
+      renderer,
+      showTag: { value: true },
+      id: { value: '原始 id' },
+      pageVm: null as any
     }
   },
   methods: {
-    render () {
-      document.querySelector('#container-wrapper')!.innerHTML = '<div id="container">2324</div>'
+    async render () {
+      document.querySelector('#container-wrapper')!.innerHTML = '<div id="container"></div>'
       const { showTag, id } = this
-      this.renderer.render(
-        'page1',
-        {
-          render (h:any) {
-            console.log(showTag, id)
-            return h('page1', {
-              props: {
-                value: showTag,
-                id: id
-              }
-            }, ['about-view 传入的插槽234'])
-          // return (
-          //   <page1 value={true} id="eeeeeeee">
-          //     about-view 传入的插槽234
-          //   </page1>
-          // )
-          }
-        },
-      document.querySelector('#container')!
-      )
+      this.pageVm = await this.renderer.render('page1', {
+        render (h:any) {
+          console.log(showTag, id)
+          return h('page1', {
+            props: {
+              value: showTag,
+              id: id
+            }
+          })
+        }
+      }, document.querySelector('#container')!)
     },
-    toggleValue () {
-      this.showTag = !this.showTag
-      this.render()
+    toggle () {
+      this.showTag.value = !this.showTag.value
+      // this.render()
     }
   },
   mounted () {
-    // 测试编译生成js
-    // (window as any).xtRequire(['ts'], function (aa:any) {
-    //   // eslint-disable-next-line no-undef
-    //   console.log((window as any).ts)
-    //   console.log('aa', aa);
-    //   (() => import('@/utils/xt-materials/generator'))()
-    // })
+    this.render()
+  },
+  watch: {
+    'id.value' (newVal) {
+      console.log('外层监听，id.value发生了改变', newVal)
+      console.log(this.pageVm, this.pageVm.id, newVal)
+    }
   }
 })
 </script>
