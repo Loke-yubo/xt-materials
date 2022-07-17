@@ -2,4 +2,11 @@
 
 这里存放内置的组件的声明 jsSchema
 
-注意如果采用 render 函数的话，应该采用平台编译的 render，毕竟每个版本的 vue 都对应单独版本的 vue-template-compiler，所以采用平台提供的 Vue.compile 方法
+### 模版编写（可行）：
+
+- 选项：template
+- 选项： render-creatElement
+
+### 模版编写（不可行）：
+
+- 选项： render-jsx （不可使用该方法，会运行时错误，jsx 的编译时采用的 vue-template-compiler，和真正运行时的 compiler 不兼容）

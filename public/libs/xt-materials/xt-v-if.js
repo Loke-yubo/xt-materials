@@ -1,6 +1,6 @@
-window.xtDefine([], function () {
+window.xtDefine('xt-v-if', function () {
   const component = {
-    name: 'VIf',
+    name: 'xt-v-if',
     template: '<div v-if="value"><slot></slot></div>',
     props: {
       value: {
