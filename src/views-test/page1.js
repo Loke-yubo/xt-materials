@@ -18,8 +18,7 @@ window.xtDefine('page1-child-component-1', ['xt-v-if'], function (...vuePlugins)
         vuePlugins.forEach((plugin) => Vue.use(plugin))
       }
       Vue.component(component.name, component)
-    },
-    component
+    }
   }
 })
 
@@ -100,7 +99,6 @@ window.xtDefine('page1', ['page1-child-component-1', 'xt-v-if', 'xt-style-global
         vuePlugins.forEach((plugin) => Vue.use(plugin))
       }
       Vue.component(component.name, component)
-    },
-    component
+    }
   }
 })

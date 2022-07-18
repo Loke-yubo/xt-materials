@@ -50,6 +50,6 @@ window.xtDefine('xt-style-scoped', function () {
     install (Vue) {
       Vue.component(component.name, component)
     },
-    component
+    components: [component]
   }
 })

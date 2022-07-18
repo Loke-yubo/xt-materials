@@ -23,6 +23,6 @@ window.xtDefine('xt-style-global', function () {
     install (Vue) {
       Vue.component(component.name, component)
     },
-    component
+    components: [component]
   }
 })
