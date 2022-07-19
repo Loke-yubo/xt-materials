@@ -11,7 +11,7 @@
 import { defineComponent } from 'vue'
 import { XtMaterialsRenderer } from '@/utils/xt-materials/renderer'
 import { requireModules } from '@/utils/xt-materials/requireModules'
-import '../views-test/page1'
+import './page1'
 
 export default defineComponent({
   data () {

@@ -1,8 +1,9 @@
 <template>
   <nav class="nav_fix">
     <div>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <router-link to="/">Home</router-link> |
+    <router-link to="/about">About</router-link> |
+    <router-link to="/page1-test">page-test</router-link>
     </div>
   </nav>
   <main class="main-fix"><router-view/></main>
