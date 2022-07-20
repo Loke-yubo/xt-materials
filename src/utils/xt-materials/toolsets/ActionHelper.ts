@@ -9,13 +9,6 @@ export class ActionHelper implements XtMaterials.ActionHelper {
     this.rootNode = rootNode
   }
 
-  getTemplateNodeByComponentDefinition (
-    componentDefinition: XtMaterials.ComponentDefinition
-  ): XtMaterials.TemplateNode {
-    const templateNode = componentDefinition._templateNodeWhenClone || { name: componentDefinition.name, children: [] } as unknown as XtMaterials.TemplateNode
-    return templateNode
-  }
-
   getParent (target: XtMaterials.TemplateNode): [XtMaterials.TemplateNode, number] {
     const [parent, idx] = findParentNode(this.rootNode, target)
     return [parent, idx]

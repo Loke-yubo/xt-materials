@@ -1,16 +1,16 @@
 <!--  -->
 <template>
   <div class="drag-item" :ref="drag">
-    <slot name="action-bar"></slot>
-    <!-- <div class="tips" style="position: relative">
-      <span>{{ templateNode.name }}</span>
-    </div> -->
+    <div class="drag-item-container">
+      <div class="node-info"><slot name="node-info"></slot></div>
+      <div class="action-bar"><slot name="action-bar"></slot></div>
+    </div>
     <slot></slot>
   </div>
 </template>
 
 <script lang="ts">
-import { ActionHelper } from '@/utils/xt-materials/toolsets/ActionHelper'
+import { Platform } from '@/utils/xt-materials/toolsets'
 import { defineComponent, inject } from 'vue'
 import { useDrag } from 'vue3-dnd'
 import { ItemTypes, DropResult, DropTypes } from './enum'
@@ -18,7 +18,7 @@ import { ItemTypes, DropResult, DropTypes } from './enum'
 export default defineComponent({
   props: ['templateNode', 'isInSourceView'],
   data () {
-    const actionHelper = inject<ActionHelper>('actionHelper')!
+    const platform = inject<Platform>('platform')!
     const [collect, drag] = useDrag({
       type: ItemTypes.ComponentDefinition,
       item: () => ({
@@ -29,16 +29,16 @@ export default defineComponent({
         if (item && dropResult) {
           switch (dropResult.dropType) {
           case DropTypes.dropBefore:
-            actionHelper.addByBefore(dropResult.templateNode, this.templateNode)
+            platform.activeActionHelper!.addByBefore(dropResult.templateNode, this.templateNode)
             break
           case DropTypes.dropAfter:
-            actionHelper.addByAfter(dropResult.templateNode, this.templateNode)
+            platform.activeActionHelper!.addByAfter(dropResult.templateNode, this.templateNode)
             break
           case DropTypes.dropUnshift:
-            actionHelper.addByUnShift(dropResult.templateNode, this.templateNode)
+            platform.activeActionHelper!.addByUnShift(dropResult.templateNode, this.templateNode)
             break
           case DropTypes.dropPush:
-            actionHelper.addByPush(dropResult.templateNode, this.templateNode)
+            platform.activeActionHelper!.addByPush(dropResult.templateNode, this.templateNode)
             break
           default:
             return
@@ -48,7 +48,6 @@ export default defineComponent({
       }
     })
     return {
-      actionHelper,
       collect,
       drag
     }
@@ -62,5 +61,21 @@ export default defineComponent({
   border-right: 0;
   padding: 5px;
   padding-right: 0;
+}
+.drag-item-container{
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 100%;
+  .node-info{
+    font-size: 12px;
+    width: 150px;
+    white-space: nowrap;
+    padding-right: 10px;
+  }
+  .action-bar{
+    width: 100%;
+    overflow: auto;
+  }
 }
 </style>

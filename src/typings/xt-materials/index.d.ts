@@ -6,8 +6,8 @@
  */
 declare namespace XtMaterials {
   /** 组件的定义，参考Vue2组件 */
-  export interface ComponentDefinition {
-    name?: string;
+  export class ComponentDefinition {
+    name: string;
     /** 其他的属性就偷懒不穷举出来了 */
     [x: string]: any;
 
@@ -29,11 +29,6 @@ declare namespace XtMaterials {
      * 数据可以保存导出，children也可以配置，不过在Vue.component注册组件的时候，会采用define的插件
      */
     _configHelper?: ConfigHelper;
-    /**
-     * 组件的action操作帮助对象，负责处理节点的clone、拖拽、删除等操作
-     * 数据不可以保存导出，在ComponentDefinition实例化的时候，进行实例化
-     */
-    _actionHepler?: ActionHelper;
   }
 
   /**
@@ -45,10 +40,6 @@ declare namespace XtMaterials {
     /** 子节点 */
     children: TemplateNode[];
     // templateEnhanced: TemplateNodeEnhanced
-  }
-
-  interface TemplateNodeEnhanced {
-    isActive: false;
   }
 
   export interface MetaHelper {
@@ -71,21 +62,32 @@ declare namespace XtMaterials {
   export interface ConfigHelper {
     attrs: AttrConfig[];
     'v-if': string;
+    'v-else-if': string;
     'v-else': string;
-    'v-slot': string;
+    'v-slot': [
+      {
+        label: string,
+        placeholder: string,
+        key: 'slotName',
+        value: string
+      },
+      {
+        label: string,
+        placeholder: string,
+        key: 'slotScoped',
+        value: string
+      }
+    ];
     'v-show': string;
     'v-on': AttrConfig[];
     'v-bind': AttrConfig[];
   }
 
   /** 操作工具函数、增删查改、拖拽、剪切、粘贴、复制、拷贝等操作 */
-  export interface ActionHelper {
+  export class ActionHelper {
     /** 剪切板，复制、剪切等操作就会把TemplateNode保存到ActionHelper.clipboard上 */
     clipboard?: TemplateNode;
     rootNode: TemplateNode;
-    getTemplateNodeByComponentDefinition(
-      componentDefinition: ComponentDefinition
-    ): TemplateNode;
     getParent(target: TemplateNode): [TemplateNode, number];
     clone(target: TemplateNode): TemplateNode;
     copy(target: TemplateNode): void;
@@ -107,7 +109,7 @@ declare namespace XtMaterials {
     components?: ComponentDefinition[];
   }
 
-  export interface Generator {
+  export class Generator {
     transpiler: any;
     hunxiao: any;
   }

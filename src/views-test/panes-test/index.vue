@@ -2,13 +2,13 @@
   <div class="home">
     <splitpanes :push-other-panes="false">
       <pane>
-        <LeftPaneContent :platform="platform"></LeftPaneContent>
+        <LeftPaneContent></LeftPaneContent>
       </pane>
       <pane size="60">
-        <CenterPaneContentVue :component-definition="componentDefinition" :platform="platform"></CenterPaneContentVue>
+        <CenterPaneContent></CenterPaneContent>
       </pane>
       <pane>
-        <span>3</span>
+        <RightPaneContent></RightPaneContent>
       </pane>
     </splitpanes>
   </div>
@@ -18,11 +18,10 @@
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import { defineComponent } from 'vue'
-import { Platform } from '@/utils/xt-materials/toolsets/Platform'
-import LeftPaneContent from './LeftPaneContent.vue'
-import CenterPaneContentVue from './CenterPaneContent.vue'
-import { ActionHelper } from '@/utils/xt-materials/toolsets/ActionHelper'
-import { ComponentDefinition } from '@/utils/xt-materials/toolsets/ComponentDefinition'
+import { Platform, ComponentDefinition } from '@/utils/xt-materials/toolsets'
+import LeftPaneContent from './LeftPaneContent/index.vue'
+import CenterPaneContent from './CenterPaneContent/index.vue'
+import RightPaneContent from './RightPaneContent/index.vue'
 
 export default defineComponent({
   name: 'panes-test',
@@ -30,11 +29,12 @@ export default defineComponent({
     Splitpanes,
     Pane,
     LeftPaneContent,
-    CenterPaneContentVue
+    CenterPaneContent,
+    RightPaneContent
   },
   provide () {
     return {
-      actionHelper: this.actionHelper
+      platform: this.platform
     }
   },
   methods: {
@@ -44,76 +44,28 @@ export default defineComponent({
   },
   data () {
     const platform = new Platform()
-    const rootNode = {
-      name: 'template',
-      children: [
-        {
-          name: 'rootNode-xt-page-fund',
-          children: [
-            {
-              name: 'child-1',
-              children: [
-                { name: 'child-1-1', children: [] },
-                { name: 'child-1-2', children: [] }
-              ]
-            },
-            {
-              name: 'child-2',
-              children: [
-                { name: 'child-2-1', children: [] }
-              ]
-            }
-          ]
-        }
-      ]
-      // eslint-disable-next-line no-undef
-    } as unknown as XtMaterials.TemplateNode
-    const componentDefinition = new ComponentDefinition()
-    componentDefinition._templateNode = rootNode
-    const actionHelper = new ActionHelper(rootNode)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa-1' } as any)
-    platform.addComponentDefinition({ name: 'aaaa-2' } as any)
-    platform.addComponentDefinition({ name: 'aaaa-3' } as any)
-    platform.addComponentDefinition({ name: 'aaaa-4' } as any)
-    platform.addComponentDefinition({ name: 'aaaa-5' } as any)
-    platform.addComponentDefinition({ name: 'aaaa-6' } as any)
-    platform.addComponentDefinition({ name: 'aaaa-7' } as any)
-    platform.addComponentDefinition({ name: 'aaaa-8' } as any)
-    platform.addComponentDefinition({ name: 'aaaa-9' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
-    platform.addComponentDefinition({ name: 'aaaa' } as any)
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-1' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-2' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-3' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-4' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-5' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-6' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-7' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-8' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-9' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-11' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-12' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-13' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-14' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-15' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-16' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-17' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-18' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-19' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-20' }))
+    platform.addComponentDefinition(new ComponentDefinition({ name: 'a-21' }))
     return {
-      platform,
-      actionHelper,
-      componentDefinition
+      platform
     }
   }
 })

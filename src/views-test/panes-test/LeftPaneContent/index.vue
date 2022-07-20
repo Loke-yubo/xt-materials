@@ -2,33 +2,28 @@
 <template>
   <div class="left-pane component-list">
     <DragItem
-      v-for="(comDef, index) in platform.componentDefinitionList"
+      v-for="(componentDefinition, index) in platform.componentDefinitionList"
       :key="index"
       class="component-list-item"
-      :template-node="actionHelper.getTemplateNodeByComponentDefinition(comDef)"
+      :template-node="componentDefinition._templateNodeWhenClone"
       :isInSourceView="true"
     >
-      {{ comDef.name }}
+      {{ componentDefinition.name }}
     </DragItem>
   </div>
 </template>
 
 <script lang="ts">
-import { ActionHelper } from '@/utils/xt-materials/toolsets/ActionHelper'
+import { Platform } from '@/utils/xt-materials/toolsets'
 import { defineComponent, inject } from 'vue'
-import DragItem from './DragItem.vue'
+import { DragItem } from '../components'
 
 export default defineComponent({
+  name: 'LeftPaneContent',
   components: { DragItem },
-  props: {
-    platform: {
-      type: Object,
-      default: () => ({})
-    }
-  },
   data () {
-    const actionHelper = inject<ActionHelper>('actionHelper')!
-    return { actionHelper }
+    const platform = inject<Platform>('platform')!
+    return { platform }
   },
   methods: {}
 })
