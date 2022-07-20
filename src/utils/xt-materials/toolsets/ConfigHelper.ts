@@ -10,7 +10,7 @@ export class ConfigHelper implements XtMaterials.ConfigHelper {
   'v-bind': XtMaterials.AttrConfig[] = [];
   children: XtMaterials.ComponentDefinition[] = []
   parent: XtMaterials.ComponentDefinition | null = null;
-  constructor (configHelper: XtMaterials.ConfigHelper) {
+  constructor (configHelper?: XtMaterials.ConfigHelper) {
     Object.assign(this, _.cloneDeep(configHelper))
   }
 }

@@ -3,22 +3,31 @@
     <div>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
-    <router-link to="/page1-test">page-test</router-link>
+    <router-link to="/page1-test">page-test</router-link> |
+    <router-link to="/panes-test">panes-test</router-link>
     </div>
   </nav>
-  <main class="main-fix"><router-view/></main>
+
+  <DndProvider class="dnd-provider" :backend="HTML5Backend">
+    <main class="main-fix"><router-view/></main>
+  </DndProvider>
 
 </template>
 <script  lang="ts">
-import { Options, Vue } from 'vue-class-component'
-import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
+import { DndProvider } from 'vue3-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { defineComponent } from 'vue'
 
-@Options({
+export default defineComponent({
   components: {
-    HelloWorld
+    DndProvider
+  },
+  data () {
+    return {
+      HTML5Backend
+    }
   }
 })
-export default class HomeView extends Vue {}
 </script>
 
 <style lang="less" scoped>
@@ -52,11 +61,11 @@ nav a.router-link-exact-active {
   color: #42b983;
 }
 
-.main-fix {
+.main-fix{
   position: fixed;
   top: 20px;
   left: 0;
   width: 100%;
-  height: 100%;
+  bottom: 0;
 }
 </style>

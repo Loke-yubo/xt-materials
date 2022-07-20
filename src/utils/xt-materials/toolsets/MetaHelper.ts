@@ -6,7 +6,7 @@ export class MetaHelper implements XtMaterials.MetaHelper {
   picturl = '';
   groupName = '';
   subGroupName = '';
-  constructor (metaHelper:XtMaterials.MetaHelper) {
+  constructor (metaHelper?:XtMaterials.MetaHelper) {
     Object.assign(this, _.cloneDeep(metaHelper))
   }
 }

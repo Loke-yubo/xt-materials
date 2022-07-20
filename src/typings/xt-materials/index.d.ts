@@ -5,19 +5,19 @@
  *
  */
 declare namespace XtMaterials {
-
-  export interface TemplateNode{
-    name: string
-    /** 上面是应用到组件自身的配置项的，下面是应用到直接子元素的 */
-    children: ComponentDefinition[];
-    parent: ComponentDefinition | null
-  }
   /** 组件的定义，参考Vue2组件 */
   export interface ComponentDefinition {
     name?: string;
     /** 其他的属性就偷懒不穷举出来了 */
     [x: string]: any;
-    nodes?: any[]
+
+    /**
+     * 组件的template节点信息，供可视化平台使用
+     * 数据可以保存导出
+     */
+    _templateNode?: TemplateNode;
+    /** 在拷贝时，复制出来的节点信息，表示拖动到界面上会渲染为多个node节点 */
+    _templateNodeWhenClone?: TemplateNode;
 
     /**
      * 组件的元信息，供可视化平台使用
@@ -36,7 +36,22 @@ declare namespace XtMaterials {
     _actionHepler?: ActionHelper;
   }
 
-  export interface MetaHelper{
+  /**
+   * 用来生成ComponentDefinition的template的
+   */
+  export interface TemplateNode extends ConfigHelper {
+    /** 节点名称 */
+    name: string;
+    /** 子节点 */
+    children: TemplateNode[];
+    // templateEnhanced: TemplateNodeEnhanced
+  }
+
+  interface TemplateNodeEnhanced {
+    isActive: false;
+  }
+
+  export interface MetaHelper {
     name: string;
     icon: string;
     picturl: string;
@@ -63,29 +78,27 @@ declare namespace XtMaterials {
     'v-bind': AttrConfig[];
   }
 
-  /** 操作工具函数、增删查改、拖拽 */
+  /** 操作工具函数、增删查改、拖拽、剪切、粘贴、复制、拷贝等操作 */
   export interface ActionHelper {
-    /** 是否为左侧的原始组件，这时只能执行“拖动”操作 */
-    isInOriginView: boolean;
-    /** 是否在画布里面，可以进行若干操作，数据是原始组件的深拷贝 */
-    isInCanvasView: boolean;
-    isMouseOn: boolean;
-    isOnDrag: boolean;
-    isDragEnter: boolean;
-    setIsInOriginView(val: boolean): void;
-    setIsInCanvasView(val: boolean): void;
-    setIsMouseOn(val: boolean): void;
-    setIsOnDrag(val: boolean): void;
-    setIsDragEnter(val: boolean): void;
-    clone(): ComponentDefinition;
-    delete(): void;
-    addByBefore(component: ComponentDefinition): void;
-    addByAfter(component: ComponentDefinition): void;
-    addByUnShift(component: ComponentDefinition): void;
-    addByPush(component: ComponentDefinition): void;
-    exchange(component: ComponentDefinition): void;
-    up(): void;
-    down(): void;
+    /** 剪切板，复制、剪切等操作就会把TemplateNode保存到ActionHelper.clipboard上 */
+    clipboard?: TemplateNode;
+    rootNode: TemplateNode;
+    getTemplateNodeByComponentDefinition(
+      componentDefinition: ComponentDefinition
+    ): TemplateNode;
+    getParent(target: TemplateNode): [TemplateNode, number];
+    clone(target: TemplateNode): TemplateNode;
+    copy(target: TemplateNode): void;
+    copyToClipboard(target: TemplateNode): void;
+    cut(target: TemplateNode): void;
+    paste(target: TemplateNode): void;
+    del(target: TemplateNode): void;
+    addByBefore(target: TemplateNode, node: TemplateNode): void;
+    addByAfter(target: TemplateNode, node: TemplateNode): void;
+    addByUnShift(target: TemplateNode, node: TemplateNode): void;
+    addByPush(target: TemplateNode, node: TemplateNode): void;
+    up(target: TemplateNode): void;
+    down(target: TemplateNode): void;
   }
 
   /** 插件的定义，参考Vue2插件 */

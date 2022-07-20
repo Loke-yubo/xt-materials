@@ -8,6 +8,9 @@ module.exports = {
     '@vue/standard',
     '@vue/typescript/recommended'
   ],
+  globals: {
+    defineProps: true
+  },
   parserOptions: {
     ecmaVersion: 2020
   },
