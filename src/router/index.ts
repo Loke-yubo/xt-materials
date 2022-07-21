@@ -22,6 +22,14 @@ const routes: Array<RouteRecordRaw> = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views-test/page1-test.vue')
+  },
+  {
+    path: '/panes-test',
+    name: 'panes-test',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views-test/panes-test/index.vue')
   }
 ]
 const base = window.__POWERED_BY_QIANKUN__ ? '/boss2/xt-materials' : process.env.BASE_URL

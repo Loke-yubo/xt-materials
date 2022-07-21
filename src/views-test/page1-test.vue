@@ -10,7 +10,6 @@
 <script lang="tsx">
 import { defineComponent } from 'vue'
 import { XtMaterialsRenderer } from '@/utils/xt-materials/renderer'
-import { requireModules } from '@/utils/xt-materials/requireModules'
 import './page1'
 
 export default defineComponent({
@@ -26,8 +25,7 @@ export default defineComponent({
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const aboutVm = this
       const { showTag, id } = aboutVm
-      document.querySelector('#container')!.innerHTML = '<div id="inner_container"></div>'
-      const [getVue] = await requireModules(['getVue-2.6.14'])
+      const [getVue] = await XtMaterialsRenderer.requireModules(['getVue-2.6.14'])
       const renderer = new XtMaterialsRenderer(getVue(), {})
       aboutVm.pageVm = await renderer.render('page1', {
         name: 'Page11111-test',
@@ -43,10 +41,7 @@ export default defineComponent({
             id
           }
         }
-      }, document.querySelector('#inner_container')!)
-      // window.xtRequire(['getVue-2.6.14'], function (getVue:any) {
-
-      // })
+      }, document.querySelector('#container')!)
     },
     toggle () {
       this.showTag.value = !this.showTag.value

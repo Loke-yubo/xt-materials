@@ -1,69 +1,126 @@
+import _ from 'lodash'
+import { ElMessage } from 'element-plus'
+
 export class ActionHelper implements XtMaterials.ActionHelper {
-  isInOrigin = true;
-  isInCanvas = false;
-  isMouseOn = false;
-  isOnDrag = false;
-  isDragEnter = false;
-  componentDefinition: XtMaterials.ComponentDefinition
-
-  constructor (componentDefinition: XtMaterials.ComponentDefinition) {
-    this.componentDefinition = componentDefinition
+  clipboard?: XtMaterials.TemplateNode;
+  /** 需要校验template只能有一个直接子节点 */
+  rootNode: XtMaterials.TemplateNode;
+  constructor (rootNode: XtMaterials.TemplateNode) {
+    this.rootNode = rootNode
   }
 
-  setIsInOrigin (val: boolean): void {
-    this.isInOrigin = val
+  getParent (target: XtMaterials.TemplateNode): [XtMaterials.TemplateNode, number] {
+    const [parent, idx] = findParentNode(this.rootNode, target)
+    return [parent, idx]
   }
 
-  setIsInCanvas (val: boolean): void {
-    this.isInCanvas = val
+  clone (target: XtMaterials.TemplateNode): XtMaterials.TemplateNode {
+    if (!this._checkIsNotRootNode(target)) throw new Error('根节点不可复制！')
+    const cloned = _.cloneDeep(target)
+    return cloned
   }
 
-  setIsMouseOn (val: boolean): void {
-    this.isMouseOn = val
+  copy (target: XtMaterials.TemplateNode): void {
+    if (!this._checkIsNotRootNode(target)) return
+    const cloned = this.clone(target)
+    const [parent, idx] = this.getParent(target)
+    parent?.children.splice(idx, 0, cloned)
   }
 
-  setIsOnDrag (val: boolean): void {
-    this.isOnDrag = val
+  copyToClipboard (target: XtMaterials.TemplateNode):void {
+    this.clipboard = target
   }
 
-  setIsDragEnter (val: boolean): void {
-    this.isDragEnter = val
+  cut (target: XtMaterials.TemplateNode):void {
+    this.copyToClipboard(target)
+    this.del(target)
   }
 
-  clone (): XtMaterials.ComponentDefinition {
-    const componentDefinition = {}
-    return componentDefinition as any
+  paste (target: XtMaterials.TemplateNode):void {
+    if (!this.clipboard) {
+      ElMessage.info('剪切板中没有节点！')
+      return
+    }
+    this.addByPush(target, this.clipboard!)
   }
 
-  delete (): void {
-    throw new Error('Method not implemented.')
+  del (target: XtMaterials.TemplateNode): void {
+    if (!this._checkIsNotRootNode(target)) return
+    const [parent, idx] = this.getParent(target)
+    parent?.children.splice(idx, 1)
   }
 
-  addByBefore (component: XtMaterials.ComponentDefinition): void {
-    throw new Error('Method not implemented.')
+  addByBefore (target: XtMaterials.TemplateNode, node: XtMaterials.TemplateNode): void {
+    if (!this._checkIsNotRootNode(target)) return
+    const cloned = this.clone(node)
+    const [parent, idx] = this.getParent(target)
+    parent?.children.splice(idx, 0, cloned)
+    console.log('before')
   }
 
-  addByAfter (component: XtMaterials.ComponentDefinition): void {
-    throw new Error('Method not implemented.')
+  addByAfter (target: XtMaterials.TemplateNode, node: XtMaterials.TemplateNode): void {
+    if (!this._checkIsNotRootNode(target)) return
+    const cloned = this.clone(node)
+    const [parent, idx] = this.getParent(target)
+    parent?.children.splice(idx + 1, 0, cloned)
+    console.log('after')
   }
 
-  addByUnShift (component: XtMaterials.ComponentDefinition): void {
-    throw new Error('Method not implemented.')
+  addByUnShift (target: XtMaterials.TemplateNode, node: XtMaterials.TemplateNode): void {
+    const cloned = this.clone(node)
+    target.children.unshift(cloned)
+    console.log('unshift')
   }
 
-  addByPush (component: XtMaterials.ComponentDefinition): void {
-    throw new Error('Method not implemented.')
+  addByPush (target: XtMaterials.TemplateNode, node: XtMaterials.TemplateNode): void {
+    const cloned = this.clone(node)
+    target.children.push(cloned)
+    console.log('push')
   }
 
-  exchange (component: XtMaterials.ComponentDefinition): void {
-    throw new Error('Method not implemented.')
+  up (target: XtMaterials.TemplateNode): void {
+    if (!this._checkIsNotRootNode(target)) return
+    const [parent, idx] = this.getParent(target)
+    if (idx === 0) return ElMessage.info('第一个节点不能再上移了') && undefined
+    const node1 = parent.children[idx - 1]
+    const node2 = parent.children[idx]
+    parent.children[idx - 1] = node2
+    parent.children[idx] = node1
   }
 
-  up (component: XtMaterials.ComponentDefinition): void {
-    throw new Error('Method not implemented.')
+  down (target: XtMaterials.TemplateNode): void {
+    if (!this._checkIsNotRootNode(target)) return
+    const [parent, idx] = this.getParent(target)
+    if (idx === parent.children.length - 1) return ElMessage.info('最后一个节点不能再下移了') && undefined
+    const node1 = parent.children[idx]
+    const node2 = parent.children[idx + 1]
+    parent.children[idx] = node2
+    parent.children[idx + 1] = node1
   }
 
-  down (component: XtMaterials.ComponentDefinition): void {
-    throw new Error('Method not implemented.')
+  /** 检查不是根节点，才可以做上下移动、复制、剪切等操作 */
+  private _checkIsNotRootNode (node:XtMaterials.TemplateNode) {
+    if (node === this.rootNode) return ElMessage.error('根节点不能执行此操作') && false
+    return true
   }
+}
+
+const findParentNode = (
+  root: XtMaterials.TemplateNode,
+  child: XtMaterials.TemplateNode
+) => {
+  let parent: XtMaterials.TemplateNode | null = null
+  let idx = -1
+  const _fn = (temp: XtMaterials.TemplateNode) => {
+    if (!Array.isArray(temp.children)) return
+    const _idx = temp.children.findIndex((item) => item === child)
+    if (_idx > -1) {
+      parent = temp
+      idx = _idx
+      return
+    }
+    if (Array.isArray(temp.children) && temp.children.length > 0) { return temp.children.forEach(_fn) }
+  }
+  _fn(root)
+  return [parent, idx] as unknown as [XtMaterials.TemplateNode, number]
 }
